@@ -2,6 +2,7 @@ import { launchBrowser } from './utils/browser.js';
 import { loginWithGoogle } from './flows/loginWithGoogle.js';
 import { getMembers } from './automation/getMembers.js';
 import { retry } from './utils/retry.js';
+import { MemberService } from './database/memberService.js';
 
 async function main() {
   let browser;
@@ -21,6 +22,15 @@ async function main() {
     // Get members with retry
     console.log('👥 Extracting member data...');
     const result = await retry(() => getMembers(page), { maxAttempts: 2, delay: 2000 });
+
+    // Save members to database
+    try {
+      console.log('💾 Saving members to database...');
+      await MemberService.saveMembers(result.members);
+      console.log('✅ Members saved to database successfully');
+    } catch (error) {
+      console.error('❌ Failed to save members to database:', error);
+    }
 
     console.log('✅ Automation completed successfully!');
     console.log(`📊 Extracted ${result.totalCount} members`);
