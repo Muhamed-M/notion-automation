@@ -1,6 +1,7 @@
 import { Page } from 'playwright';
+import { MemberExtractionResult } from '../types/Member';
 
-export async function getMembers(page: Page): Promise<any[]> {
+export async function getMembers(page: Page): Promise<MemberExtractionResult> {
   // Step 1: Go to members/settings page
   // Open workspace members modal
   const button = page.getByRole('button', { name: 'Settings', exact: true });
@@ -98,7 +99,13 @@ export async function getMembers(page: Page): Promise<any[]> {
   });
   console.log(`Screenshot saved as: members-screenshot-${timestamp}.png`);
 
-  // Step 5: Log or return results
-  console.log('Found members:', members);
-  return members;
+  // Step 5: Prepare results
+  const result: MemberExtractionResult = {
+    members,
+    totalCount: members.length,
+    timestamp: new Date().toISOString(),
+  };
+
+  console.log('Found members:', result);
+  return result;
 }
