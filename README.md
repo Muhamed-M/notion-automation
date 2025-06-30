@@ -111,4 +111,3 @@ prisma/
 - ✅ Error screenshots
 - ✅ Retry logic
 - ✅ TypeScript support
-- ✅ Structured logging
